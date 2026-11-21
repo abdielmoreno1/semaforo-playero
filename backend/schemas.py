@@ -15,7 +15,6 @@ class PlayaInput(BaseModel):
     lat: float = Field(ge=-90, le=90)
     lng: float = Field(ge=-180, le=180)
     popularidad: float = Field(ge=0, le=1)
-    # null = sin observación (NO equivale a 0, ver data/docs/fuentes.md)
     sargazo: Optional[float] = Field(default=None, ge=0, le=100)
     temp_agua: float = Field(ge=15, le=40)
     fragilidad: Optional[float] = Field(default=None, ge=0, le=100)
@@ -43,25 +42,20 @@ class PlayaSemaforoOut(BaseModel):
     motivos: list[str]
     transporte: str
     alternativas: list[AlternativaOut]
+    distancia_km: Optional[float] = None
 
 
 class SaludOut(BaseModel):
     ok: bool
 
 
-class ReporteIn(BaseModel):
-    """Reporte ciudadano enviado desde el formulario del QR."""
-    playa_id: str = Field(min_length=1, max_length=60)
-    sargazo: NivelSargazo
-    ocupacion: NivelOcupacion
-
-
 class Reporte(BaseModel):
-    """Reporte normalizado y persistido (valores 0-100)."""
+    id: Optional[str] = None
     playa_id: str
     fecha_hora: datetime
     sargazo: int = Field(ge=0, le=100)
     ocupacion: int = Field(ge=0, le=100)
+    origen: Optional[str] = "qr_sitio"
 
 
 class ImpactoPlayaOut(BaseModel):

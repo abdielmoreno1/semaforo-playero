@@ -1,6 +1,13 @@
 """Lógica pura de negocio (sin dependencias de FastAPI)."""
+import math
+import sys
 from datetime import date, datetime, time, timedelta
-from typing import Iterable
+from pathlib import Path
+from typing import Iterable, Optional
+
+BACKEND_DIR = Path(__file__).resolve().parent
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
 
 from schemas import (
     AlternativaOut, ImpactoOut, ImpactoPlayaOut, PlayaInput, PlayaSemaforoOut,
@@ -12,7 +19,6 @@ CURVA: dict[int, float] = {
     13: 1.0, 14: 0.95, 15: 0.85, 16: 0.65, 17: 0.40, 18: 0.20, 19: 0.08,
     20: 0.05,
 }
-# Ponderación basada en factores de estrés ecológico del Arrecife Mesoamericano
 PESOS = {"sargazo": 0.45, "calor": 0.20, "fragilidad": 0.20, "ocupacion": 0.15}
 UMBRAL_ESTRES_TERMICO = 29.5  # °C: inicio de riesgo de blanqueamiento coralino (NOAA / UNAM)
 
@@ -29,8 +35,20 @@ VENTANA_ANTES = timedelta(hours=3)
 VENTANA_DESPUES = timedelta(hours=1)
 
 
+def calcular_distancia_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Fórmula de Haversine para distancia en kilómetros."""
+    r_tierra = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = (math.sin(dlat / 2) ** 2 +
+         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+         math.sin(dlon / 2) ** 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return round(r_tierra * c, 1)
+
+
 def ocupacion(playa: PlayaInput, fecha: date, hora: int, festivo: bool) -> int:
-    factor_hora = CURVA.get(hora, 0.05)  # hora + 2 > 20 cae al valor base
+    factor_hora = CURVA.get(hora, 0.05)
     factor_dia = 1.0 if fecha.weekday() >= 5 else 0.7
     factor_festivo = 1.15 if festivo else 1.0
     valor = 100 * factor_hora * playa.popularidad * factor_dia * factor_festivo
@@ -38,7 +56,6 @@ def ocupacion(playa: PlayaInput, fecha: date, hora: int, festivo: bool) -> int:
 
 
 def estres(playa: PlayaInput, ocup: int) -> int:
-    """Capacidad de Carga Real (CCR - Cifuentes): promedio ponderado ambiental."""
     calor = max(0.0, min(100.0, (playa.temp_agua - 28.0) / 4.0 * 100.0))
     componentes = {
         "sargazo": playa.sargazo,
@@ -72,7 +89,6 @@ def motivos(
     elif o >= 60:
         out.append(f"Ocupación alta: {o}%")
     
-    # Factor A: Descomposición de sargazo y anoxia (Dra. Van Tussenbroek - UNAM)
     if playa.sargazo is None:
         out.append(MSG_SIN_SARGAZO)
     elif playa.sargazo >= 50:
@@ -80,38 +96,30 @@ def motivos(
     elif playa.sargazo >= 30:
         out.append("Sargazo moderado")
     
-    # Factor B: Estrés térmico sobre arrecife (NOAA)
     if playa.temp_agua >= UMBRAL_ESTRES_TERMICO:
         out.append(f"Agua cálida ({playa.temp_agua}°C): mayor estrés para el arrecife")
-    
     if e >= 45 and frag >= 60 and playa.nota:
         out.append(playa.nota)
-    
-    # Factor Estacional: Anidación de tortugas (may-oct)
     if 5 <= fecha.month <= 10 and frag >= 60:
         out.append(MSG_TORTUGAS)
-    
-    # Factor B (cont): Mitigación de químicos en arrecife (Reef-Safe)
     if playa.temp_agua >= UMBRAL_ESTRES_TERMICO or frag >= 60:
         out.append(MSG_REEF_SAFE)
-    
-    # Factor C: Ciencia Ciudadana participativa (Validación QR)
     if n_reportes:
         s = "s" if n_reportes > 1 else ""
         out.append(f"Validado por {n_reportes} reporte{s} ciudadano{s} (QR) en las últimas 3 h")
-    
     return out or ["Poca gente y ecosistema en buen estado"]
 
 
 def reportes_vigentes(
     reportes: Iterable[Reporte], fecha: date, hora: int
 ) -> dict[str, list[Reporte]]:
-    """Agrupa por playa los reportes dentro de la ventana de la consulta."""
-    consulta = datetime.combine(fecha, time(hora, 30))
+    """Agrupa por playa los reportes de las últimas 3 horas hasta el cierre de la hora consultada."""
+    fin_ventana = datetime.combine(fecha, time(hora, 59, 59))
+    inicio_ventana = datetime.combine(fecha, time(hora, 0, 0)) - VENTANA_ANTES
     out: dict[str, list[Reporte]] = {}
     for r in reportes:
         ts = r.fecha_hora.replace(tzinfo=None)
-        if consulta - VENTANA_ANTES <= ts <= consulta + VENTANA_DESPUES:
+        if inicio_ventana <= ts <= fin_ventana:
             out.setdefault(r.playa_id, []).append(r)
     return out
 
@@ -119,6 +127,7 @@ def reportes_vigentes(
 def evaluar(
     playas: list[PlayaInput], fecha: date, hora: int, festivo: bool,
     reportes: Iterable[Reporte] = (),
+    origen_lat: Optional[float] = None, origen_lng: Optional[float] = None,
 ) -> list[PlayaSemaforoOut]:
     vigentes = reportes_vigentes(reportes, fecha, hora)
     base = []
@@ -127,17 +136,19 @@ def evaluar(
         o2 = ocupacion(p, fecha, hora + 2, festivo)
         rs = vigentes.get(p.id, [])
         if rs:
-            # Observación en campo (Ciencia Ciudadana) recalibra el sargazo y la ocupación
             p = p.model_copy(update={"sargazo": sum(r.sargazo for r in rs) / len(rs)})
             o = round((o + sum(r.ocupacion for r in rs) / len(rs)) / 2)
         e = estres(p, o)
-        base.append((p, o, o2, e, semaforo(o, o2, e), len(rs)))
+        dist = None
+        if origen_lat is not None and origen_lng is not None:
+            dist = calcular_distancia_km(origen_lat, origen_lng, p.lat, p.lng)
+        base.append((p, o, o2, e, semaforo(o, o2, e), len(rs), dist))
 
     def transporte(pl: PlayaInput) -> str:
         return pl.transporte or TRANSPORTE_DEFAULT
 
     resultado: list[PlayaSemaforoOut] = []
-    for p, o, o2, e, sem, n_rep in base:
+    for p, o, o2, e, sem, n_rep, dist in base:
         alternativas: list[AlternativaOut] = []
         if sem != "verde":
             otras = [b for b in base if b[0].id != p.id]
@@ -168,13 +179,13 @@ def evaluar(
                 ocupacion=o, ocupacion_2h=o2, estres=e, semaforo=sem,
                 motivos=motivos(p, o, o2, e, fecha, n_rep),
                 transporte=transporte(p), alternativas=alternativas,
+                distancia_km=dist,
             )
         )
     return resultado
 
 
 def impacto(resultados: list[PlayaSemaforoOut], n_reportes: int = 0) -> ImpactoOut:
-    """Estrés ecológico evitado por cada visitante redirigido a la mejor alternativa."""
     detalle: list[ImpactoPlayaOut] = []
     for r in resultados:
         if r.semaforo == "verde" or not r.alternativas or r.estres == 0:

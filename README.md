@@ -1,11 +1,17 @@
 # Semáforo Playero Inteligente · Cancún
 
- **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
- Proyecto desarrollado para el Hackathon **HackMaya**.
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+[![Tests](https://img.shields.io/badge/Tests-17%20Passed-brightgreen)](https://docs.pytest.org/)
+[![ODS](https://img.shields.io/badge/ONU%20ODS-12%20%7C%2013%20%7C%2014-blue)](#-alineaci%C3%B3n-con-los-ods-de-la-onu)
+
+> **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
+> Proyecto desarrollado para el Hackathon **HackMaya**.
 
 ---
 
-##  ¿Qué es el Semáforo Playero Inteligente?
+## ¿Qué es el Semáforo Playero Inteligente?
 
 Cancún recibe millones de visitantes al año, pero el turismo masivo suele concentrarse en unas cuantas playas abiertas al este (como **Playa Delfines** y **Gaviota Azul**), provocando saturación, pisoteo de dunas embrionarias y presión sobre el arrecife de coral, mientras que las playas protegidas de la bahía norte (**Langosta**, **Tortugas**, **Caracol**) permanecen subutilizadas.
 
@@ -17,7 +23,7 @@ Cancún recibe millones de visitantes al año, pero el turismo masivo suele conc
 
 ---
 
-##  Sustento Científico & Ecológico
+## Sustento Científico & Ecológico
 
 El motor de cálculo no utiliza números arbitrarios; está fundamentado en literatura científica y estudios ambientales del Caribe Mexicano:
 
@@ -47,8 +53,11 @@ El Ayuntamiento de Benito Juárez cuenta con el *Tablero de Playas del IMPLAN*. 
 
 ## Documentación de la API
 
-### 1. Consultar Semáforo de Playas
-`GET /api/playas?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}`
+### 1. Consultar Semáforo de Playas (con Geolocalización Opcional)
+`GET /api/playas?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}&lat={float}&lng={float}`
+
+* Si se envían `lat` y `lng` (ubicación del usuario), cada playa incluye `distancia_km` calculada con la fórmula de Haversine.
+* También puedes consultar una playa individual: `GET /api/playas/{playa_id}?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}`
 
 **Ejemplo de Petición:**
 ```bash
@@ -115,11 +124,11 @@ Cuantifica la reducción porcentual de estrés ambiental que se logra al desviar
 ```
 
 ### 3. Health Check
-`GET /api/salud` ➡️ `{"ok": true}`
+`GET /api/salud` -> `{"ok": true}`
 
 ---
 
-##  Flujo de Ciencia Ciudadana (`reportes.json`)
+## Flujo de Ciencia Ciudadana (`reportes.json`)
 
 Para evitar depender exclusivamente de satélites o boletines gubernamentales desactualizados, el sistema contempla **reportes in situ mediante códigos QR**.
 
@@ -142,7 +151,7 @@ Cuando existen reportes en la ventana de las últimas 3 horas respecto a la fech
 
 ---
 
-##  Estructura del Repositorio
+## Estructura del Repositorio
 
 ```text
 semaforo-playero/
@@ -161,10 +170,9 @@ semaforo-playero/
 ├── frontend/                 # Interfaz de usuario estática (HTML5 / Bootstrap 5 / JS)
 │   ├── index.html            # Dashboard interactivo con sliders de fecha y hora
 │   └── style.css             # Estilos y tarjetas de semaforización
-├── tests/                    # Suite de pruebas automatizadas
-│   ├── conftest.py           # Configuración de fixtures
-│   └── test_api.py           # 14 pruebas de integración y casos borde
-└── README.md
+└── tests/                    # Suite de pruebas automatizadas
+    ├── conftest.py           # Configuración de fixtures
+    └── test_api.py           # 17 pruebas de integración y casos borde
 ```
 
 ---
@@ -218,7 +226,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ---
 
-##  Alineación con los ODS de la ONU
+## Alineación con los ODS de la ONU
 
 * **ODS 14 (Vida Submarina):** Mitigación del estrés térmico en el Arrecife Mesoamericano, reducción de contaminación química por protectores solares y alerta temprana contra anoxia costera.
 * **ODS 12 (Producción y Consumo Responsables):** Fomento de un turismo regenerativo, consciente y no extractivo.
@@ -226,7 +234,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ---
 
-##  Equipo (HackMaya 2026)
+## Equipo (HackMaya 2026)
 
 * **Christian** — *Arquitectura Backend, Motor Matemático de CCT & APIs (Python / FastAPI / Pytest)*
 * **Abdiel** — *Desarrollo Frontend & Experiencia de Usuario (HTML / CSS / JS)*
