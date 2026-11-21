@@ -1,32 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semaforo Playero</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-light">
-  <nav class="navbar navbar-dark bg-primary mb-4">
-    <div class="container"><span class="navbar-brand">🚦 Semáforo Playero - Cancún</span></div>
-  </nav>
+<html lang="es" data-bs-theme="light">
 
-  <div class="container">
-    <div class="row g-3 align-items-center mb-4">
-      <div class="col-12 col-md-4"><input type="date" id="fecha" class="form-control"></div>
-      <div class="col-12 col-md-5">
-        <input type="range" id="hora" class="form-range" min="6" max="20" value="13">
-        <small id="horaTxt"></small>
-      </div>
-      <div class="col-12 col-md-3 form-check form-switch">
-        <input type="checkbox" id="festivo" class="form-check-input">
-        <label class="form-check-label" for="festivo">Festivo</label>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Semaforo Playero</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-light">
+  <header class="py-3 mb-3 border-bottom">
+    <div class="container-fluid header-grid align-items-center">
+      
+      <div class="header-logo d-flex align-items-center justify-content-center">
+
+        <div class="header"><a class="d-flex justify-content-center" href="#" role="button"><img
+              src="images/logo-horizontal-blanco.png" alt="logo" width="310" height="110" class="rectangle"></a>
+
+        </div>
       </div>
     </div>
+  </header>
 
-    <div id="tarjetas" class="row g-3"></div>
-  </div>
+  <main>
+    <section class="summer-hero" aria-labelledby="hero-title">
+      <div class="summer-hero-copy">
+        <p class="summer-eyebrow"> CANCÚN · QUINTANA ROO</p>
+        <h1 id="hero-title">Tu día de playa, <span>mejor planeado.</span></h1>
+        <p class="summer-description">Descubre cómo están las playas, consulta su nivel de ocupación y elige el mejor lugar para disfrutar el verano.</p>
+        <div class="summer-highlights" aria-label="Beneficios">
+          <span> Decide antes de salir</span>
+          <span> Encuentra tu playa ideal</span>
+        </div>
+      </div>
+
+      <div class="phone-showcase" aria-label="Vista previa de la aplicación Semáforo Playero">
+        <div class="phone phone-back" aria-hidden="true">
+          <div class="phone-screen">
+            <p class="phone-kicker">OTRAS OPCIONES</p>
+            <h2>Playas cerca de ti</h2>
+            <div class="phone-beach-card">
+              <span class="beach-dot beach-dot-green"></span>
+              <div><strong>Playa Langosta</strong><small>Tranquila · 42% ocupación</small></div>
+            </div>
+            <div class="phone-beach-card">
+              <span class="beach-dot beach-dot-yellow"></span>
+              <div><strong>Playa Tortugas</strong><small>Moderada · 64% ocupación</small></div>
+            </div>
+            <div class="phone-mini-map" aria-hidden="true">🌴　🌊　📍</div>
+          </div>
+        </div>
+
+        <div class="phone phone-front">
+          <div class="phone-screen">
+            <p class="phone-kicker">SEMÁFORO PLAYERO · HOY</p>
+            <div class="phone-sun" aria-hidden="true"></div>
+            <p class="phone-greeting">Gran dia de playa</p>
+            <div class="phone-featured-beach">
+              <span class="phone-label">PLAYA DESTACADA</span>
+              <h2>Playa Delfines</h2>
+              <div class="phone-status"><span class="beach-dot beach-dot-yellow"></span> Afluencia moderada</div>
+              <div class="phone-occupancy"><strong>68%</strong><span>ocupación estimada</span></div>
+              <div class="phone-progress"><span></span></div>
+            </div>
+            <p class="phone-footnote">Vista previa · Datos ilustrativos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
   <script src="app.js"></script>
 </body>
+
 </html>
