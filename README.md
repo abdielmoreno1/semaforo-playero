@@ -169,7 +169,7 @@ semaforo-playero/
 
 ---
 
-## 🚀 Instalación y Ejecución Local
+## Instalación y Ejecución Local
 
 ### Prerrequisitos
 * Python 3.11 o superior
