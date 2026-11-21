@@ -1,4 +1,4 @@
-const API = "http://localhost:8000";
+const API = location.origin;
 const COLOR = { verde: "#16a34a", amarillo: "#d97706", rojo: "#dc2626" };
 const NOMBRE = { verde: "En buen estado", amarillo: "Con precaución", rojo: "Evitar esta playa" };
 const DIA = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
