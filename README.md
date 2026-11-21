@@ -1,13 +1,9 @@
 # Semáforo Playero Inteligente · Cancún
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/Tests-17%20Passed-brightgreen)](https://docs.pytest.org/)
-[![ODS](https://img.shields.io/badge/ONU%20ODS-12%20%7C%2013%20%7C%2014-blue)](#alineaci%C3%B3n-con-los-ods-de-la-onu)
 
-> **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
-> Proyecto desarrollado para el Hackathon **HackMaya**.
+
+ **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
+ Proyecto desarrollado para el Hackathon **HackMaya** por Christian Alexis Córdova Yam / Abdiel Moreno Ayvar y Gustavo Ortíz Reyes.
 
 ---
 
