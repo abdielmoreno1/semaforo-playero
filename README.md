@@ -1,17 +1,11 @@
-# 🚦 Semáforo Playero Inteligente · Cancún
-
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
-[![Tests](https://img.shields.io/badge/Tests-14%20Passed-brightgreen)](https://docs.pytest.org/)
-[![ODS](https://img.shields.io/badge/ONU%20ODS-12%20%7C%2013%20%7C%2014-blue)](#-alineaci%C3%B3n-con-los-ods-de-la-onu)
+# Semáforo Playero Inteligente · Cancún
 
 > **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
 > Proyecto desarrollado para el Hackathon **HackMaya**.
 
 ---
 
-## 🌊 ¿Qué es el Semáforo Playero Inteligente?
+##  ¿Qué es el Semáforo Playero Inteligente?
 
 Cancún recibe millones de visitantes al año, pero el turismo masivo suele concentrarse en unas cuantas playas abiertas al este (como **Playa Delfines** y **Gaviota Azul**), provocando saturación, pisoteo de dunas embrionarias y presión sobre el arrecife de coral, mientras que las playas protegidas de la bahía norte (**Langosta**, **Tortugas**, **Caracol**) permanecen subutilizadas.
 
@@ -23,7 +17,7 @@ Cancún recibe millones de visitantes al año, pero el turismo masivo suele conc
 
 ---
 
-## 🔬 Sustento Científico & Ecológico
+##  Sustento Científico & Ecológico
 
 El motor de cálculo no utiliza números arbitrarios; está fundamentado en literatura científica y estudios ambientales del Caribe Mexicano:
 
