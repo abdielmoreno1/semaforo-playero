@@ -1,17 +1,23 @@
 """API FastAPI del Semáforo Playero Inteligente."""
 import json
+import sys
 from datetime import date
 from pathlib import Path
+from typing import Optional
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
 
+BACKEND_DIR = Path(__file__).resolve().parent
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
+
 from engine import evaluar, impacto, reportes_vigentes
 from schemas import ImpactoOut, PlayaInput, PlayaSemaforoOut, Reporte, SaludOut
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = BACKEND_DIR.parent
 PLAYAS_PATH = BASE_DIR / "data" / "playas.json"
 REPORTES_PATH = BASE_DIR / "data" / "reportes.json"
 
@@ -31,7 +37,6 @@ FALLBACK_PLAYAS: list[dict] = [
 
 
 def cargar_playas() -> list[PlayaInput]:
-    """Lee data/playas.json en cada petición; usa fallback si falta o es inválido."""
     try:
         datos = json.loads(PLAYAS_PATH.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -44,7 +49,7 @@ def cargar_playas() -> list[PlayaInput]:
                 playa = PlayaInput.model_validate(item)
             except ValidationError:
                 continue
-            if playa.id not in vistos:  # ids duplicados: gana el primero
+            if playa.id not in vistos:
                 vistos.add(playa.id)
                 playas.append(playa)
     if not playas:
@@ -53,7 +58,6 @@ def cargar_playas() -> list[PlayaInput]:
 
 
 def cargar_reportes() -> list[Reporte]:
-    """Lee data/reportes.json (simulación del flujo de reportes ciudadanos)."""
     try:
         datos = json.loads(REPORTES_PATH.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -67,7 +71,11 @@ def cargar_reportes() -> list[Reporte]:
     return reportes
 
 
-app = FastAPI(title="Semáforo Playero Inteligente")
+app = FastAPI(
+    title="Semáforo Playero Inteligente",
+    description="API para estimación de afluencia, estrés ecológico y balanceo de carga turística en Cancún.",
+    version="1.1.0",
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -81,13 +89,41 @@ def salud() -> SaludOut:
     return SaludOut(ok=True)
 
 
+def _validar_coordenadas(lat: Optional[float], lng: Optional[float]) -> None:
+    if (lat is None) != (lng is None):
+        raise HTTPException(
+            status_code=422,
+            detail="Debes proporcionar tanto 'lat' como 'lng' para calcular distancia.",
+        )
+
+
 @app.get("/api/playas", response_model=list[PlayaSemaforoOut])
 def playas(
     fecha: date,
     hora: int = Query(..., ge=6, le=20),
     festivo: bool = False,
+    lat: Optional[float] = Query(None, ge=-90, le=90, description="Latitud del usuario para calcular distancia"),
+    lng: Optional[float] = Query(None, ge=-180, le=180, description="Longitud del usuario para calcular distancia"),
 ) -> list[PlayaSemaforoOut]:
-    return evaluar(cargar_playas(), fecha, hora, festivo, cargar_reportes())
+    _validar_coordenadas(lat, lng)
+    return evaluar(cargar_playas(), fecha, hora, festivo, cargar_reportes(), lat, lng)
+
+
+@app.get("/api/playas/{playa_id}", response_model=PlayaSemaforoOut)
+def obtener_playa(
+    playa_id: str,
+    fecha: date,
+    hora: int = Query(..., ge=6, le=20),
+    festivo: bool = False,
+    lat: Optional[float] = Query(None, ge=-90, le=90),
+    lng: Optional[float] = Query(None, ge=-180, le=180),
+) -> PlayaSemaforoOut:
+    _validar_coordenadas(lat, lng)
+    resultados = evaluar(cargar_playas(), fecha, hora, festivo, cargar_reportes(), lat, lng)
+    for p in resultados:
+        if p.id == playa_id:
+            return p
+    raise HTTPException(status_code=404, detail="Playa no encontrada")
 
 
 @app.get("/api/impacto", response_model=ImpactoOut)

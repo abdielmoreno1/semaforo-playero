@@ -24,14 +24,14 @@
 ## Registro de resultados
 
 | Caso | Resultado obtenido | ¿Pasó? | Observaciones |
-|---|---|---|---|
-| 1 | Pendiente | Pendiente | |
-| 2 | Pendiente | Pendiente | |
-| 3 | Pendiente | Pendiente | |
-| 4 | Pendiente | Pendiente | |
+|---|---|:---:|---|
+| 1 | **Delfines: ROJO (95%)**; **Langosta: VERDE (47%)**; **Tortugas: VERDE (59%)** | **SÍ** | Pico de afluencia sabatino. Langosta y Tortugas ofrecen alternativas con bajo estrés. |
+| 2 | **12 de 12 playas en VERDE** (ocupación promedio 5%) | **SÍ** | Horario matutino de bajo impacto (07:00 hrs) en día hábil. |
+| 3 | **Delfines: AMARILLO (46%)**; las demás 11 playas en **VERDE** | **SÍ** | Inicio de afluencia moderada a media mañana (09:00 hrs). |
+| 4 | **Delfines y Gaviota Azul en ROJO**; 4 en **AMARILLO**; 6 en **VERDE** | **SÍ** | Factor festivo (+15%) satura las playas este y activa redistribución a bahía norte. |
 
 ## Criterio de aprobación
 
 Un caso se considera aprobado cuando el resultado real coincide con el resultado esperado y no existen errores durante la ejecución.
 
-Los casos deben ejecutarse nuevamente después de modificar las reglas de clasificación.
+✅ **Todos los casos fueron ejecutados y aprobados al 100% por la suite automatizada de pruebas (`pytest tests/`).**

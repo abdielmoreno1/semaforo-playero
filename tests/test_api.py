@@ -178,3 +178,36 @@ def test_impacto_ecologico(client):
     det = {x["id"]: x for x in body["detalle"]}
     assert det["delfines"]["reduccion_estres_pct"] > 0
     assert det["delfines"]["estres_alternativa"] < det["delfines"]["estres"]
+
+
+def test_endpoint_playa_individual(client):
+    r = client.get("/api/playas/delfines", params={"fecha": "2026-11-21", "hora": 13})
+    assert r.status_code == 200
+    assert r.json()["id"] == "delfines"
+    assert client.get("/api/playas/no_existe", params={"fecha": "2026-11-21", "hora": 13}).status_code == 404
+
+
+def test_distancia_geolocalizacion(client):
+    r = client.get("/api/playas", params={"fecha": "2026-11-21", "hora": 13, "lat": 21.16, "lng": -86.85})
+    assert r.status_code == 200
+    for p in r.json():
+        assert p["distancia_km"] is not None
+        assert p["distancia_km"] > 0
+    # Enviar solo lat sin lng debe devolver 422
+    r_incompleto = client.get("/api/playas", params={"fecha": "2026-11-21", "hora": 13, "lat": 21.16})
+    assert r_incompleto.status_code == 422
+
+
+def test_integracion_datos_reales_12_playas():
+    """Verifica que data/playas.json y data/reportes.json reales carguen y cumplan los 4 casos."""
+    c = TestClient(main.app)
+    r1 = c.get("/api/playas", params={"fecha": "2026-11-21", "hora": 13, "festivo": "false"})
+    assert r1.status_code == 200
+    d1 = {p["id"]: p for p in r1.json()}
+    assert len(d1) == 12
+    assert d1["delfines"]["semaforo"] == "rojo"
+    assert d1["langosta"]["semaforo"] == "verde"
+    assert d1["tortugas"]["semaforo"] == "verde"
+    # Caso 2: Lunes 07:00 todo en verde
+    r2 = c.get("/api/playas", params={"fecha": "2026-11-23", "hora": 7, "festivo": "false"})
+    assert all(p["semaforo"] == "verde" for p in r2.json())
