@@ -18,7 +18,7 @@
 </head>
 
 <body class="bg-light">
-  <header class="py-3 mb-3 border-bottom">
+  <header class="py-3 mb-3 border-bottom" data-sp-header>
     <div class="container-fluid header-grid align-items-center">
       
       <div class="header-logo d-flex align-items-center justify-content-center">
@@ -37,9 +37,13 @@
         <p class="summer-eyebrow"> CANCÚN · QUINTANA ROO</p>
         <h1 id="hero-title">Tu día de playa, <span>mejor planeado.</span></h1>
         <p class="summer-description">Descubre cómo están las playas, consulta su nivel de ocupación y elige el mejor lugar para disfrutar el verano.</p>
-        <div class="summer-highlights" aria-label="Beneficios">
-          <span> Decide antes de salir</span>
-          <span> Encuentra tu playa ideal</span>
+        <div class="summer-highlights" aria-label="Acciones">
+          <button type="button" data-modo="todas" aria-controls="sp-resultados">
+            Decide antes de salir
+          </button>
+          <button type="button" data-modo="ideal" aria-controls="sp-resultados">
+            Encuentra tu playa ideal
+          </button>
         </div>
       </div>
 
@@ -56,7 +60,7 @@
               <span class="beach-dot beach-dot-yellow"></span>
               <div><strong>Playa Tortugas</strong><small>Moderada · 64% ocupación</small></div>
             </div>
-            <div class="phone-mini-map" aria-hidden="true">🌴　🌊　📍</div>
+            <div class="phone-mini-map" aria-hidden="true"><span></span></div>
           </div>
         </div>
 
@@ -64,7 +68,7 @@
           <div class="phone-screen">
             <p class="phone-kicker">SEMÁFORO PLAYERO · HOY</p>
             <div class="phone-sun" aria-hidden="true"></div>
-            <p class="phone-greeting">Gran dia de playa</p>
+            <p class="phone-greeting">Gran día de playa</p>
             <div class="phone-featured-beach">
               <span class="phone-label">PLAYA DESTACADA</span>
               <h2>Playa Delfines</h2>
@@ -79,15 +83,15 @@
     </section>
 
     <section id="sp-resultados" class="sp-resultados" hidden>
-<div class="sp-contenedor">
-<p id="sp-estado" class="sp-estado" hidden></p>
-<div id="sp-ideal" class="sp-ideal" hidden></div>
-<div class="sp-mapa-wrap">
-<div class="sp-mapa-barra">
+  <div class="sp-contenedor">
+  <p id="sp-estado" class="sp-estado" hidden></p>
+  <div id="sp-ideal" class="sp-ideal" hidden></div>
+    <div class="sp-mapa-wrap">
+  <div class="sp-mapa-barra">
   <button type="button" id="sp-ver-todas" class="sp-btn-secundario">Todas las
 playas</button>
 <span id="sp-ubicacion-txt" class="sp-ubicacion-txt"></span>
-</div>
+  </div>
 <div id="sp-mapa" class="sp-mapa"></div>
 </div>
 <h3 id="sp-lista-titulo" class="sp-lista-titulo"></h3>
