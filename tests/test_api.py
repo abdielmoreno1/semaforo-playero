@@ -1,17 +1,20 @@
+import json
 from datetime import date
 
 import pytest
 from fastapi.testclient import TestClient
 
 import main
-from engine import MSG_TORTUGAS, evaluar
+from engine import (
+    MSG_REEF_SAFE, MSG_SIN_SARGAZO, MSG_TORTUGAS, estres, evaluar,
+)
 from schemas import PlayaInput
 
 
 @pytest.fixture()
 def client(tmp_path, monkeypatch):
-    # Archivo inexistente -> fallback en memoria (datos deterministas).
     monkeypatch.setattr(main, "PLAYAS_PATH", tmp_path / "no_existe.json")
+    monkeypatch.setattr(main, "REPORTES_PATH", tmp_path / "no_reportes.json")
     return TestClient(main.app)
 
 
@@ -105,3 +108,73 @@ def test_fallback_sin_verdes_devuelve_2_menor_estres():
     assert [x.id for x in alts] == ["d", "b"]
     assert all(x.transporte.endswith(" (alternativa de menor impacto)") for x in alts)
     assert "a" not in [x.id for x in res["d"].alternativas]
+
+
+PLAYAS_CON_NULL = [
+    {"id": "delfines", "nombre": "Playa Delfines", "lat": 21.06, "lng": -86.77,
+     "popularidad": 1.0, "sargazo": None, "temp_agua": 28.87, "fragilidad": 70,
+     "transporte": "", "nota": ""},
+    {"id": "langosta", "nombre": "Playa Langosta", "lat": 21.14, "lng": -86.78,
+     "popularidad": 0.4, "sargazo": 1, "temp_agua": 28.87, "fragilidad": None,
+     "transporte": "Bus R-1 Km 5", "nota": ""},
+    {"id": "langosta", "nombre": "Duplicada", "lat": 0, "lng": 0,
+     "popularidad": 0.1, "sargazo": 0, "temp_agua": 28, "fragilidad": 0,
+     "transporte": "x", "nota": ""},
+]
+
+
+@pytest.fixture()
+def real(tmp_path, monkeypatch):
+    f = tmp_path / "playas.json"
+    f.write_text(json.dumps(PLAYAS_CON_NULL), encoding="utf-8")
+    monkeypatch.setattr(main, "PLAYAS_PATH", f)
+    rep_file = tmp_path / "reportes.json"
+    rep_file.write_text("[]", encoding="utf-8")
+    monkeypatch.setattr(main, "REPORTES_PATH", rep_file)
+    return TestClient(main.app), rep_file
+
+
+def test_null_no_descarta_playas_ni_cuenta_como_cero(real):
+    c, _ = real
+    d = get(c, "2026-11-21", 13)
+    assert set(d) == {"delfines", "langosta"}
+    assert MSG_SIN_SARGAZO in d["delfines"]["motivos"]
+    assert d["delfines"]["transporte"]
+    p = PlayaInput(**PLAYAS_CON_NULL[0])
+    assert estres(p, 100) > estres(p.model_copy(update={"sargazo": 0}), 100)
+
+
+def test_reef_safe_en_playa_fragil(real):
+    c, _ = real
+    d = get(c, "2026-11-23", 7)
+    assert MSG_REEF_SAFE in d["delfines"]["motivos"]
+    assert MSG_REEF_SAFE not in d["langosta"]["motivos"]
+
+
+def test_simulacion_reportes_json_recalibra_semaforo(real):
+    c, rep_file = real
+    hoy = "2026-11-23"
+    antes = get(c, hoy, 10)["langosta"]
+    assert antes["semaforo"] == "verde"
+    
+    # Simulamos que en data/reportes.json entraron 2 reportes de visitantes por QR
+    simulados = [
+        {"playa_id": "langosta", "fecha_hora": "2026-11-23T10:15:00", "sargazo": 80, "ocupacion": 90},
+        {"playa_id": "langosta", "fecha_hora": "2026-11-23T10:20:00", "sargazo": 80, "ocupacion": 90},
+    ]
+    rep_file.write_text(json.dumps(simulados), encoding="utf-8")
+    
+    despues = get(c, hoy, 10)["langosta"]
+    assert despues["semaforo"] != "verde"
+    assert despues["ocupacion"] > antes["ocupacion"]
+    assert any("reportes ciudadanos" in m for m in despues["motivos"])
+
+
+def test_impacto_ecologico(client):
+    r = client.get("/api/impacto", params={"fecha": "2026-11-21", "hora": 13})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["playas_en_riesgo"] >= 1
+    det = {x["id"]: x for x in body["detalle"]}
+    assert det["delfines"]["reduccion_estres_pct"] > 0
+    assert det["delfines"]["estres_alternativa"] < det["delfines"]["estres"]

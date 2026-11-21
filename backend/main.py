@@ -8,11 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
 
-from engine import evaluar
-from schemas import PlayaInput, PlayaSemaforoOut, SaludOut
+from engine import evaluar, impacto, reportes_vigentes
+from schemas import ImpactoOut, PlayaInput, PlayaSemaforoOut, Reporte, SaludOut
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PLAYAS_PATH = BASE_DIR / "data" / "playas.json"
+REPORTES_PATH = BASE_DIR / "data" / "reportes.json"
 
 FALLBACK_PLAYAS: list[dict] = [
     {"id": "delfines", "nombre": "Playa Delfines", "lat": 21.05, "lng": -86.77,
@@ -36,15 +37,34 @@ def cargar_playas() -> list[PlayaInput]:
     except (OSError, ValueError):
         datos = None
     playas: list[PlayaInput] = []
+    vistos: set[str] = set()
     if isinstance(datos, list):
         for item in datos:
             try:
-                playas.append(PlayaInput.model_validate(item))
+                playa = PlayaInput.model_validate(item)
             except ValidationError:
                 continue
+            if playa.id not in vistos:  # ids duplicados: gana el primero
+                vistos.add(playa.id)
+                playas.append(playa)
     if not playas:
         playas = [PlayaInput.model_validate(p) for p in FALLBACK_PLAYAS]
     return playas
+
+
+def cargar_reportes() -> list[Reporte]:
+    """Lee data/reportes.json (simulación del flujo de reportes ciudadanos)."""
+    try:
+        datos = json.loads(REPORTES_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    reportes: list[Reporte] = []
+    for item in datos if isinstance(datos, list) else []:
+        try:
+            reportes.append(Reporte.model_validate(item))
+        except ValidationError:
+            continue
+    return reportes
 
 
 app = FastAPI(title="Semáforo Playero Inteligente")
@@ -67,10 +87,22 @@ def playas(
     hora: int = Query(..., ge=6, le=20),
     festivo: bool = False,
 ) -> list[PlayaSemaforoOut]:
-    return evaluar(cargar_playas(), fecha, hora, festivo)
+    return evaluar(cargar_playas(), fecha, hora, festivo, cargar_reportes())
 
 
-# Debe ir al final, después de todas las rutas /api.
+@app.get("/api/impacto", response_model=ImpactoOut)
+def impacto_ecologico(
+    fecha: date,
+    hora: int = Query(..., ge=6, le=20),
+    festivo: bool = False,
+) -> ImpactoOut:
+    reportes = cargar_reportes()
+    resultados = evaluar(cargar_playas(), fecha, hora, festivo, reportes)
+    n = sum(len(v) for v in reportes_vigentes(reportes, fecha, hora).values())
+    return impacto(resultados, n)
+
+
+# Montaje de frontend estático al final
 app.mount(
     "/",
     StaticFiles(directory=BASE_DIR / "frontend", html=True, check_dir=False),
