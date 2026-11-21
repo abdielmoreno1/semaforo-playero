@@ -182,6 +182,8 @@ def evaluar(
                 distancia_km=dist,
             )
         )
+    if origen_lat is not None and origen_lng is not None:
+        resultado.sort(key=lambda r: (r.distancia_km if r.distancia_km is not None else float("inf"), r.ocupacion, r.estres))
     return resultado
 
 

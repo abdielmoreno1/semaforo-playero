@@ -4,7 +4,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 [![Tests](https://img.shields.io/badge/Tests-17%20Passed-brightgreen)](https://docs.pytest.org/)
-[![ODS](https://img.shields.io/badge/ONU%20ODS-12%20%7C%2013%20%7C%2014-blue)](#-alineaci%C3%B3n-con-los-ods-de-la-onu)
+[![ODS](https://img.shields.io/badge/ONU%20ODS-12%20%7C%2013%20%7C%2014-blue)](#alineaci%C3%B3n-con-los-ods-de-la-onu)
 
 > **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
 > Proyecto desarrollado para el Hackathon **HackMaya**.
@@ -53,15 +53,14 @@ El Ayuntamiento de Benito Juárez cuenta con el *Tablero de Playas del IMPLAN*. 
 
 ## Documentación de la API
 
-### 1. Consultar Semáforo de Playas (con Geolocalización Opcional)
+### 1. Consultar Semáforo de Playas (con Geolocalización y Ordenamiento GPS)
 `GET /api/playas?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}&lat={float}&lng={float}`
 
-* Si se envían `lat` y `lng` (ubicación del usuario), cada playa incluye `distancia_km` calculada con la fórmula de Haversine.
-* También puedes consultar una playa individual: `GET /api/playas/{playa_id}?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}`
+* Si se envían `lat` y `lng` (ubicación GPS del usuario), cada playa incluye `distancia_km` calculada con la fórmula de Haversine y el listado se ordena automáticamente de la playa más cercana a la más lejana. Si se envía solo una coordenada sin su par, responde `HTTP 422`.
 
 **Ejemplo de Petición:**
 ```bash
-curl -X GET "http://localhost:8000/api/playas?fecha=2026-11-21&hora=13&festivo=false"
+curl -X GET "http://localhost:8000/api/playas?fecha=2026-11-21&hora=13&festivo=false&lat=21.15&lng=-86.78"
 ```
 
 **Ejemplo de Respuesta:**
@@ -72,59 +71,76 @@ curl -X GET "http://localhost:8000/api/playas?fecha=2026-11-21&hora=13&festivo=f
     "nombre": "Playa Delfines",
     "lat": 21.062,
     "lng": -86.7778,
-    "ocupacion": 100,
+    "ocupacion": 96,
     "ocupacion_2h": 85,
-    "estres": 57,
+    "estres": 58,
     "semaforo": "rojo",
     "motivos": [
-      "Saturada: 100% de ocupación",
+      "Saturada: 96% de ocupación",
       "Mucho sargazo: riesgo de marea marrón y anoxia en pastos marinos",
       "Zona de dunas protegidas y mirador icónico de Cancún",
       "Protege el arrecife: agua cálida o zona frágil. Prohibido bloqueador químico...",
-      "Validado por 2 reportes ciudadanos (QR) en las últimas 3 h"
+      "Validado por 6 reportes ciudadanos (QR) en las últimas 3 h"
     ],
     "transporte": "Bus R-1 o R-2 Km 18",
+    "distancia_km": 9.8,
     "alternativas": [
       {
-        "id": "langosta",
-        "nombre": "Playa Langosta",
-        "ocupacion": 45,
+        "id": "pez-volador",
+        "nombre": "Playa Pez Volador",
+        "ocupacion": 28,
         "estres": 21,
-        "transporte": "Bus R-1 o R-2 Km 5"
+        "transporte": "Bus R-1 o R-2 Km 5.5"
       }
     ]
   }
 ]
 ```
 
-### 2. Métrica de Impacto Ecológico Evitado
+### 2. Detalle de Playa Individual
+`GET /api/playas/{playa_id}?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}&lat={float}&lng={float}`
+
+Devuelve el objeto completo de una playa específica (ideal para vistas de detalle o modales). Si el identificador no existe, responde `HTTP 404`.
+
+### 3. Métrica de Impacto Ecológico Evitado
 `GET /api/impacto?fecha={YYYY-MM-DD}&hora={6..20}&festivo={true|false}`
 
-Cuantifica la reducción porcentual de estrés ambiental que se logra al desviar visitantes hacia playas con menor impacto.
+Cuantifica la reducción porcentual de estrés ambiental que se logra al desviar visitantes hacia playas en verde y contabiliza los reportes ciudadanos activos en la ventana de 3 horas.
 
 ```json
 {
   "playas_evaluadas": 12,
-  "playas_en_riesgo": 7,
-  "reduccion_promedio_pct": 38,
-  "reportes_ciudadanos_activos": 2,
+  "playas_en_riesgo": 5,
+  "reduccion_promedio_pct": 53,
+  "reportes_ciudadanos_activos": 28,
   "detalle": [
     {
       "id": "delfines",
       "nombre": "Playa Delfines",
       "semaforo": "rojo",
-      "estres": 57,
-      "alternativa_id": "langosta",
-      "alternativa_nombre": "Playa Langosta",
+      "estres": 58,
+      "alternativa_id": "pez-volador",
+      "alternativa_nombre": "Playa Pez Volador",
       "estres_alternativa": 21,
-      "reduccion_estres_pct": 63
+      "reduccion_estres_pct": 64
     }
   ]
 }
 ```
 
-### 3. Health Check
+### 4. Health Check
 `GET /api/salud` -> `{"ok": true}`
+
+---
+
+## Interfaz Web Integrada (Frontend)
+
+El servidor FastAPI sirve automáticamente la interfaz web estática ubicada en `frontend/`:
+
+* **Dos modos de exploración:** *Decide antes de salir* (catálogo completo de las 12 playas) y *Encuentra tu playa ideal* (recomendación automática con el menor índice combinado de ocupación y estrés ecológico).
+* **Mapa interactivo (Leaflet + OpenStreetMap):** Marcadores codificados por color del semáforo, ubicación del usuario en tiempo real y enlaces directos a rutas en Google Maps.
+* **Filtros en vivo:** Selector de fecha, deslizador de horario (06:00 a 20:00) y casilla de día festivo que recalculan mapa, tarjetas e impacto ambiental al instante.
+* **Tarjetas detalladas:** Muestran ocupación actual, pronóstico a 2 horas, índice de estrés ecológico, ruta de autobús R-1/R-2, distancia GPS, motivos científicos y alternativas ecológicas.
 
 ---
 
@@ -132,7 +148,7 @@ Cuantifica la reducción porcentual de estrés ambiental que se logra al desviar
 
 Para evitar depender exclusivamente de satélites o boletines gubernamentales desactualizados, el sistema contempla **reportes in situ mediante códigos QR**.
 
-El archivo `data/reportes.json` simula la ingesta de observaciones directas de los bañistas:
+El archivo `data/reportes.json` incluye **50 reportes simulados** distribuidos en las 12 playas de Cancún:
 
 ```json
 [
@@ -147,7 +163,7 @@ El archivo `data/reportes.json` simula la ingesta de observaciones directas de l
 ]
 ```
 
-Cuando existen reportes en la ventana de las últimas 3 horas respecto a la fecha y hora consultadas, el backend recalibra el sargazo y la afluencia, ajustando el semáforo y mostrando la insignia de validación ciudadana.
+Cuando existen reportes dentro de la ventana causal de las últimas 3 horas hasta el cierre de la hora consultada (`[hora - 3h, hora:59:59]`), el backend recalibra el sargazo y la afluencia, ajustando el semáforo y mostrando la insignia de validación ciudadana.
 
 ---
 
@@ -156,23 +172,26 @@ Cuando existen reportes en la ventana de las últimas 3 horas respecto a la fech
 ```text
 semaforo-playero/
 ├── backend/                  # API REST en FastAPI
-│   ├── engine.py             # Motor puro de cálculo ecológico y CCT
+│   ├── engine.py             # Motor puro de cálculo ecológico, CCT y distancia Haversine
 │   ├── schemas.py            # Modelos estrictos Pydantic v2
-│   ├── main.py               # Endpoints FastAPI, CORS y StaticFiles
+│   ├── main.py               # Endpoints FastAPI, CORS, validación GPS y StaticFiles
 │   └── requirements.txt      # Dependencias ligeras (FastAPI, Uvicorn, Pydantic, Pytest, HTTPX)
 ├── data/                     # Datos estructurados y documentación científica
-│   ├── playas.json           # Catálogo maestro de playas de Cancún (12 playas)
-│   ├── reportes.json         # Log simulado de reportes ciudadanos por QR
+│   ├── playas.json           # Catálogo maestro de playas de Cancún (12 playas validadas)
+│   ├── reportes.json         # Log simulado con 50 reportes ciudadanos por QR
 │   ├── validar.py            # Script de validación de integridad de datos
 │   └── docs/                 # Sustento bibliográfico y casos de prueba
 │       ├── fuentes.md        # Fuentes oficiales de monitoreo (Sargazo, SST, UNAM)
-│       └── pruebas.md        # Matriz de casos de prueba
-├── frontend/                 # Interfaz de usuario estática (HTML5 / Bootstrap 5 / JS)
-│   ├── index.html            # Dashboard interactivo con sliders de fecha y hora
-│   └── style.css             # Estilos y tarjetas de semaforización
-└── tests/                    # Suite de pruebas automatizadas
-    ├── conftest.py           # Configuración de fixtures
-    └── test_api.py           # 17 pruebas de integración y casos borde
+│       └── pruebas.md        # Matriz de 4 casos de prueba aprobados
+├── frontend/                 # Interfaz web estática (HTML5 / CSS3 / Bootstrap / Leaflet / JS)
+│   ├── index.html            # Landing page, vista previa móvil, controles de filtro y mapa
+│   ├── app.js                # Consumo asíncrono de APIs, mapa Leaflet, GPS y tarjetas
+│   ├── style.css             # Estilos responsivos y semaforización visual
+│   └── images/               # Recursos gráficos y logotipos de la aplicación
+├── tests/                    # Suite de pruebas automatizadas
+│   ├── conftest.py           # Configuración de fixtures
+│   └── test_api.py           # 17 pruebas de integración, GPS, reportes QR y casos borde
+└── README.md
 ```
 
 ---
