@@ -1,7 +1,7 @@
 # Semáforo Playero Inteligente · Cancún
 
-> **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
-> Proyecto desarrollado para el Hackathon **HackMaya**.
+ **Sistema predictivo de balanceo de carga turística y mitigación de estrés ecológico para las playas de Cancún.**  
+ Proyecto desarrollado para el Hackathon **HackMaya**.
 
 ---
 
