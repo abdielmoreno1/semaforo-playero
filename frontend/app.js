@@ -14,24 +14,51 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;",
 ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function momentoActual() {
+const inputF = $("sp-fecha"), inputH = $("sp-hora"), inputFest = $("sp-festivo");
+if (inputF && inputF.value && inputH && inputH.value !== "") {
+const fecha = inputF.value;
+const hora = Number(inputH.value);
+const festivo = Boolean(inputFest && inputFest.checked);
+const [y, m, day] = fecha.split("-").map(Number);
+const dt = new Date(y, (m || 1) - 1, day || 1);
+const dia = DIA[dt.getDay()] || fecha;
+return {
+fecha,
+hora,
+festivo,
+etiqueta: `${dia} ${fecha} · ${String(hora).padStart(2, "0")}:00${festivo ? " (Festivo)" : ""}`,
+};
+}
 const q = new URLSearchParams(location.search);
 const f = q.get("fecha"), h = q.get("hora");
-if (f && h !== null) return { fecha: f, hora: Number(h), etiqueta: `${f} · ${h}:00 (prueba)` };
+const festParam = q.get("festivo") === "true";
+if (f && h !== null) {
+const horaNum = Math.min(20, Math.max(6, Number(h) || 13));
+if (inputF) inputF.value = f;
+if (inputH) inputH.value = String(horaNum);
+if (inputFest) inputFest.checked = festParam;
+if ($("sp-hora-txt")) $("sp-hora-txt").textContent = `${String(horaNum).padStart(2, "0")}:00`;
+return { fecha: f, hora: horaNum, festivo: festParam, etiqueta: `${f} · ${horaNum}:00` };
+}
 const d = new Date();
 let hora = d.getHours();
 if (hora >= 20) {
 d.setDate(d.getDate() + 1);
-hora = 9;
+hora = 13;
 } else if (hora < 6) {
-hora = 9;
+hora = 13;
 }
 const fecha = [
 d.getFullYear(),
 String(d.getMonth() + 1).padStart(2, "0"),
 String(d.getDate()).padStart(2, "0"),
 ].join("-");
+if (inputF) inputF.value = fecha;
+if (inputH) inputH.value = String(hora);
+if (inputFest) inputFest.checked = festParam;
+if ($("sp-hora-txt")) $("sp-hora-txt").textContent = `${String(hora).padStart(2, "0")}:00`;
 const dia = DIA[d.getDay()];
-return { fecha, hora, etiqueta: `${dia} · ${hora}:00` };
+return { fecha, hora, festivo: festParam, etiqueta: `${dia} · ${String(hora).padStart(2, "0")}:00` };
 }
 function pedirUbicacion() {
 return new Promise((resolve) => {
@@ -65,25 +92,31 @@ lon: playa.lng,
 };
 }
 
-async function cargarDatos(modo) {
+async function cargarDatos() {
 const m = momentoActual();
-const params = new URLSearchParams({ fecha: m.fecha, hora: String(m.hora), festivo: "false" });
+const params = new URLSearchParams({
+fecha: m.fecha,
+hora: String(m.hora),
+festivo: String(Boolean(m.festivo)),
+});
 if (ubicacion && Number.isFinite(ubicacion.lat) && Number.isFinite(ubicacion.lng)) {
 params.set("lat", String(ubicacion.lat));
 params.set("lng", String(ubicacion.lng));
 }
+const paramsImpacto = new URLSearchParams({
+fecha: m.fecha,
+hora: String(m.hora),
+festivo: String(Boolean(m.festivo)),
+});
 const [resTodas, resImpacto] = await Promise.all([
 fetch(`${API}/api/playas?${params}`),
-modo === "ideal" ? fetch(`${API}/api/impacto?${params}`) : Promise.resolve(null),
+fetch(`${API}/api/impacto?${paramsImpacto}`),
 ]);
 if (!resTodas.ok) throw new Error(`HTTP ${resTodas.status}`);
 const dTodas = await resTodas.json();
 if (!Array.isArray(dTodas)) throw new Error("La API devolvió un formato de playas inesperado.");
-if (modo === "ideal" && (!resImpacto || !resImpacto.ok)) {
-throw new Error(`No se pudo consultar el impacto ecológico (HTTP ${resImpacto?.status || "sin respuesta"}).`);
-}
 cacheTodas = dTodas.map(adaptarPlaya);
-cacheImpacto = resImpacto ? await resImpacto.json() : null;
+cacheImpacto = resImpacto && resImpacto.ok ? await resImpacto.json() : null;
 if (!cacheTodas.length) throw new Error("No pudimos cargar las playas. Intenta de nuevo en un momento.");
 return m;
 }
@@ -107,20 +140,26 @@ const dist = p.distancia_km != null ? `${esc(p.distancia_km)} km de ti` : "";
 const urlMaps = urlGoogleMaps(p);
 const motivos = Array.isArray(p.motivos) ? p.motivos : [];
 const alternativas = Array.isArray(p.alternativas)
-? p.alternativas.map((alternativa) => typeof alternativa === "string" ? alternativa : alternativa.nombre).filter(Boolean)
+? p.alternativas.map((alt) =>
+typeof alt === "string"
+? alt
+: `${alt.nombre} (${alt.ocupacion}% ocup · estrés ${alt.estres}% · ${alt.transporte})`
+).filter(Boolean)
 : [];
-const municipio = p.municipio ? esc(p.municipio) : "";
+const subtitulo = p.transporte ? esc(p.transporte) : (p.municipio ? esc(p.municipio) : "");
 const detalle = [
 etiquetaExtra ? `<p><strong>${esc(etiquetaExtra)}</strong></p>` : "",
+`<p><strong>Pronóstico (+2 h):</strong> ${esc(p.ocupacion_2h ?? p.ocupacion_pct)}% de ocupación · <strong>Estrés ecológico:</strong> ${esc(p.estres)}/100</p>`,
+p.transporte ? `<p><strong>Transporte público:</strong> ${esc(p.transporte)}</p>` : "",
 motivos.length ? `<p><strong>Por qué:</strong> ${esc(motivos.join(". "))}</p>` : "",
-alternativas.length ? `<p><strong>Alternativas:</strong> ${esc(alternativas.join(", "))}</p>` : "",
+alternativas.length ? `<p><strong>Alternativas recomendadas:</strong> ${esc(alternativas.join(" | "))}</p>` : "",
 `<p><a href="${esc(urlMaps)}" target="_blank" rel="noopener">Abrir en Google Maps</a></p>`,
 ].join("");
 return `
 <article class="sp-card sp-card--${esc(estado)}">
 <div class="sp-card-top">
 <div class="sp-card-heading">
-${municipio ? `<p class="sp-card-lugar">${municipio}</p>` : ""}
+${subtitulo ? `<p class="sp-card-lugar">${subtitulo}</p>` : ""}
 <h4>${esc(p.nombre)}</h4>
 </div>
 <span class="sp-badge sp-badge--${esc(estado)}">${esc(NOMBRE[estado] || estado)}
@@ -128,6 +167,10 @@ ${municipio ? `<p class="sp-card-lugar">${municipio}</p>` : ""}
 </div>
 <div class="sp-card-datos">
 <div class="sp-ocupacion"><strong>${esc(p.ocupacion_pct)}%</strong><span>ocupación</span></div>
+<div class="sp-metricas-sec">
+<span>En 2h: <strong>${esc(p.ocupacion_2h ?? p.ocupacion_pct)}%</strong></span>
+<span>Estrés: <strong>${esc(p.estres)}%</strong></span>
+</div>
 ${dist ? `<p class="sp-distancia">${dist}</p>` : ""}
 </div>
 <div class="sp-acciones">
@@ -152,15 +195,15 @@ function globoHtml(p) {
 const est = (p.estado || "verde").toLowerCase();
 const dist = p.distancia_km != null ? ` · <strong>a ${esc(p.distancia_km)} km de
 ti</strong>` : "";
+const bus = p.transporte ? `<br><small>${esc(p.transporte)}</small>` : "";
 const urlMaps = urlGoogleMaps(p);
 return `
 <strong>${esc(p.nombre)}</strong><br>
-${esc(NOMBRE[est] || est)} · ${esc(p.ocupacion_pct)}%${dist}<br>
+${esc(NOMBRE[est] || est)} · Ocupación ${esc(p.ocupacion_pct)}% · Estrés ${esc(p.estres)}%${dist}${bus}<br>
 <a href="${esc(urlMaps)}" target="_blank" rel="noopener">Cómo llegar</a>`;
 }
 function pintarMapa(playas) {
 iniciarMapa();
-if (mapa._popup && mapa._popup.isOpen()) return; // no cierres el globo que el usuario está leyendo
 capaPlayas.clearLayers();
 marcadores = {};
 const puntos = [];
@@ -201,18 +244,27 @@ return [...grupo].sort((a, b) => puntaje(a) - puntaje(b))[0];
 }
 function textoImpacto(ideal) {
 const detalle = (cacheImpacto?.detalle || [])
-.filter((item) => item.alternativa_id === ideal.id)
+.filter((item) => item.alternativa_id === ideal?.id)
 .sort((a, b) => b.reduccion_estres_pct - a.reduccion_estres_pct)[0];
-if (detalle) {
-return `Al elegir ${ideal.nombre} en vez de ${detalle.nombre}, el estrés estimado baja ${detalle.reduccion_estres_pct}% (${detalle.estres} a ${detalle.estres_alternativa} puntos).`;
+const extraQr = cacheImpacto?.reportes_ciudadanos_activos > 0
+? ` · Validado con ${cacheImpacto.reportes_ciudadanos_activos} reportes ciudadanos (QR).`
+: "";
+if (detalle && ideal) {
+return `Al elegir ${ideal.nombre} en vez de ${detalle.nombre}, el estrés ecológico baja ${detalle.reduccion_estres_pct}% (de ${detalle.estres} a ${detalle.estres_alternativa} puntos)${extraQr}`;
 }
-return resumenImpacto();
+return resumenImpacto(ideal);
 }
-function resumenImpacto() {
+function resumenImpacto(ideal = null) {
+const extraQr = cacheImpacto?.reportes_ciudadanos_activos > 0
+? ` (${cacheImpacto.reportes_ciudadanos_activos} reportes ciudadanos QR activos)`
+: "";
 if (cacheImpacto?.playas_en_riesgo > 0) {
-return `Hay ${cacheImpacto.playas_en_riesgo} playas en riesgo. Al elegir alternativas de menor impacto, la reducción promedio estimada es ${cacheImpacto.reduccion_promedio_pct}%.`;
+return `Impacto Ambiental Colectivo: hay ${cacheImpacto.playas_en_riesgo} de ${cacheImpacto.playas_evaluadas} playas con presión alta. Al elegir alternativas en verde, la reducción promedio de estrés ecológico es de ${cacheImpacto.reduccion_promedio_pct}%${extraQr}.`;
 }
-return `No se detectan playas en riesgo en este horario. ${ideal.nombre} tiene ${ideal.estres} puntos de estrés estimado.`;
+if (ideal) {
+return `No se detectan playas en riesgo crítico en este horario. ${ideal.nombre} tiene solo ${ideal.estres} puntos de estrés ecológico estimado${extraQr}.`;
+}
+return `Ecosistema costero en buen estado: 0 playas en riesgo crítico en este horario${extraQr}.`;
 }
 function pintarIdeal(playas, m) {
 const box = $("sp-ideal");
@@ -227,15 +279,14 @@ const est = (ideal.estado || "verde").toLowerCase();
 const dist = ideal.distancia_km != null ? ` · <strong>a ${esc(ideal.distancia_km)} km de
 ti</strong>` : "";
 const urlMaps = urlGoogleMaps(ideal);
-const municipio = ideal.municipio ? `${esc(ideal.municipio)} · ` : "";
+const transporte = ideal.transporte ? ` · ${esc(ideal.transporte)}` : "";
 const impacto = textoImpacto(ideal);
 box.hidden = false;
 box.className = est === "amarillo" ? "sp-ideal sp-ideal--amarillo" : "sp-ideal";
 box.innerHTML = `
 <p class="sp-ideal-etiqueta">Playa recomendada · ${esc(m.etiqueta)}</p>
 <h3>${esc(ideal.nombre)} (${esc(NOMBRE[est] || est)})</h3>
-<p class="sp-meta">${municipio}Ocupación
-${esc(ideal.ocupacion_pct)}%${dist}</p>
+<p class="sp-meta">Ocupación ${esc(ideal.ocupacion_pct)}% (en 2h: ${esc(ideal.ocupacion_2h ?? ideal.ocupacion_pct)}%) · Estrés ecológico ${esc(ideal.estres)}/100${transporte}${dist}</p>
 <p>${esc((ideal.motivos || []).join(". ") || "Es la opción más tranquila en este horario.")}</p>
 ${impacto ? `<div class="sp-impacto">${esc(impacto)}</div>` : ""}
 <div class="sp-ideal-acciones">
@@ -253,12 +304,17 @@ el.textContent = texto;
 el.className = esError ? "sp-estado sp-estado--error" : "sp-estado";
 }
 function pintarTodo(m) {
-const playas = cacheTodas;
+const playas = [...cacheTodas];
+if (ubicacion) {
+playas.sort((a, b) => (a.distancia_km ?? Infinity) - (b.distancia_km ?? Infinity));
+}
 $("sp-ubicacion-txt").textContent = ubicacion
 ? "Ordenadas por cercanía a tu ubicación"
 : "Sin acceso a tu ubicación (activa el permiso para ver distancias)";
+const bannerImpacto = $("sp-resumen-impacto");
 pintarMapa(playas);
 if (modoActual === "ideal") {
+if (bannerImpacto) bannerImpacto.hidden = true;
 pintarIdeal(playas, m);
 const ideal = elegirIdeal(playas);
 const candidatas = playas.filter((p) => p.id !== ideal?.id);
@@ -272,7 +328,11 @@ $("sp-lista-titulo").textContent = recomendables.length
 $("sp-lista").innerHTML = otras.map((p) => tarjetaHtml(p)).join("");
 } else {
 $("sp-ideal").hidden = true;
-$("sp-lista-titulo").textContent = `Todas las playas · ${m.etiqueta}`;
+if (bannerImpacto && cacheImpacto) {
+bannerImpacto.hidden = false;
+bannerImpacto.textContent = resumenImpacto();
+}
+$("sp-lista-titulo").textContent = `Todas las playas (${playas.length}) · ${m.etiqueta}`;
 $("sp-lista").innerHTML = playas.map((p) => tarjetaHtml(p)).join("");
 }
 }
@@ -329,6 +389,11 @@ void abrirSeccion("todas");
 return;
 }
 
+if (target.closest("#sp-ver-ideal")) {
+void abrirSeccion("ideal");
+return;
+}
+
 const botonDetalle = target.closest("[data-toggle-detalle]");
 if (botonDetalle) {
 const detalle = botonDetalle.closest(".sp-card")?.querySelector(".sp-detalle");
@@ -346,3 +411,22 @@ const id = btn.dataset.verMapa;
 enfocarPlaya(id);
 }
 });
+
+async function refrescarPorFiltro() {
+if (!modoActual) modoActual = "todas";
+const hInput = $("sp-hora");
+if (hInput && $("sp-hora-txt")) {
+$("sp-hora-txt").textContent = `${String(hInput.value).padStart(2, "0")}:00`;
+}
+try {
+const m = await cargarDatos(modoActual);
+mostrarEstado("");
+pintarTodo(m);
+} catch (err) {
+mostrarEstado(err.message || "Error al actualizar los filtros.", true);
+}
+}
+
+$("sp-fecha")?.addEventListener("change", () => void refrescarPorFiltro());
+$("sp-hora")?.addEventListener("input", () => void refrescarPorFiltro());
+$("sp-festivo")?.addEventListener("change", () => void refrescarPorFiltro());

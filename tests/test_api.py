@@ -190,9 +190,12 @@ def test_endpoint_playa_individual(client):
 def test_distancia_geolocalizacion(client):
     r = client.get("/api/playas", params={"fecha": "2026-11-21", "hora": 13, "lat": 21.16, "lng": -86.85})
     assert r.status_code == 200
-    for p in r.json():
+    datos = r.json()
+    for p in datos:
         assert p["distancia_km"] is not None
         assert p["distancia_km"] > 0
+    distancias = [p["distancia_km"] for p in datos]
+    assert distancias == sorted(distancias)
     # Enviar solo lat sin lng debe devolver 422
     r_incompleto = client.get("/api/playas", params={"fecha": "2026-11-21", "hora": 13, "lat": 21.16})
     assert r_incompleto.status_code == 422

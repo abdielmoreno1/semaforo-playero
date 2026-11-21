@@ -83,21 +83,38 @@
     </section>
 
     <section id="sp-resultados" class="sp-resultados" hidden>
-  <div class="sp-contenedor">
-  <p id="sp-estado" class="sp-estado" hidden></p>
-  <div id="sp-ideal" class="sp-ideal" hidden></div>
-    <div class="sp-mapa-wrap">
-  <div class="sp-mapa-barra">
-  <button type="button" id="sp-ver-todas" class="sp-btn-secundario">Todas las
-playas</button>
-<span id="sp-ubicacion-txt" class="sp-ubicacion-txt"></span>
-  </div>
-<div id="sp-mapa" class="sp-mapa"></div>
-</div>
-<h3 id="sp-lista-titulo" class="sp-lista-titulo"></h3>
-<div id="sp-lista" class="sp-lista"></div>
-</div>
-</section>
+      <div class="sp-contenedor">
+        <p id="sp-estado" class="sp-estado" hidden></p>
+        <div id="sp-ideal" class="sp-ideal" hidden></div>
+        <div class="sp-mapa-wrap">
+          <div class="sp-mapa-barra">
+            <div class="sp-controles" aria-label="Filtros de consulta">
+              <label class="sp-control">
+                <span>Fecha</span>
+                <input type="date" id="sp-fecha">
+              </label>
+              <label class="sp-control sp-control--rango">
+                <span>Horario: <output id="sp-hora-txt" for="sp-hora">13:00</output></span>
+                <input type="range" id="sp-hora" min="6" max="20" step="1" value="13">
+              </label>
+              <label class="sp-control sp-control--check">
+                <input type="checkbox" id="sp-festivo">
+                <span>Día festivo</span>
+              </label>
+            </div>
+            <div class="sp-barra-acciones">
+              <button type="button" id="sp-ver-todas" class="sp-btn-secundario">Todas las playas</button>
+              <button type="button" id="sp-ver-ideal" class="sp-btn-secundario">Playa ideal</button>
+              <span id="sp-ubicacion-txt" class="sp-ubicacion-txt"></span>
+            </div>
+          </div>
+          <div id="sp-mapa" class="sp-mapa"></div>
+        </div>
+        <div id="sp-resumen-impacto" class="sp-resumen-impacto" hidden></div>
+        <h3 id="sp-lista-titulo" class="sp-lista-titulo"></h3>
+        <div id="sp-lista" class="sp-lista"></div>
+      </div>
+    </section>
 
     
   </main>
