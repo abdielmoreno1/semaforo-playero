@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="es" data-bs-theme="light">
 
 <head>
   <meta charset="UTF-8">
@@ -17,38 +17,64 @@
 <body class="bg-light">
   <header class="py-3 mb-3 border-bottom">
     <div class="container-fluid header-grid align-items-center">
-      <div><a class="d-flex align-items-center lg:col-4 mb-2 lg:mb-0 theme-inverse text-decoration-none" href="#"
-          role="button" data-bs-toggle="menu" aria-expanded="false" aria-label="Bootstrap menu"><svg class="bi me-2"
-            width="40" height="32" aria-hidden="true">
-            <use href="#bootstrap"></use>
-          </svg></a>
- 
-      </div>
+      
       <div class="header-logo d-flex align-items-center justify-content-center">
 
-        <div class="header"><a class="d-flex justify-content-start" href="#" role="button"><img
-              src="images/logo-horizontal-blanco.png" alt="logo" width="310" height="110" class="rectangle" ></a>
+        <div class="header"><a class="d-flex justify-content-center" href="#" role="button"><img
+              src="images/logo-horizontal-blanco.png" alt="logo" width="310" height="110" class="rectangle"></a>
 
         </div>
       </div>
     </div>
   </header>
 
-  <div class="container">
-    <div class="px-4 pt-5 my-5 text-center border-bottom">
-      <h1 class="hero1 fs-5xl fw-bold fg-emphasis-inverse">¿No sabes a que playa vas a ir?</h1>
-      <div class="lg:col-6 mx-auto">
-        <p class="fs-lg fw-light mb-4">Descubre las mejores playas para tu próxima vsisita aqui, nosotros nos
-          encargamos de estudiar las perfectas condiciones para tu dia de vacaiones. Desde la ocupacion playera hasta
-          las condiciones climáticas ideales.</p>
-        
+  <main>
+    <section class="summer-hero" aria-labelledby="hero-title">
+      <div class="summer-hero-copy">
+        <p class="summer-eyebrow"> CANCÚN · QUINTANA ROO</p>
+        <h1 id="hero-title">Tu día de playa, <span>mejor planeado.</span></h1>
+        <p class="summer-description">Descubre cómo están las playas, consulta su nivel de ocupación y elige el mejor lugar para disfrutar el verano.</p>
+        <div class="summer-highlights" aria-label="Beneficios">
+          <span> Decide antes de salir</span>
+          <span> Encuentra tu playa ideal</span>
+        </div>
       </div>
-      <div class="overflow-hidden" style="max-height: 30vh;">
-        <div class="container px-5"><img src="images/hero1.png" class="img-fluid border rounded-3 shadow-lg mb-4"
-            alt="Example image" width="700" height="500" loading="lazy"></div>
+
+      <div class="phone-showcase" aria-label="Vista previa de la aplicación Semáforo Playero">
+        <div class="phone phone-back" aria-hidden="true">
+          <div class="phone-screen">
+            <p class="phone-kicker">OTRAS OPCIONES</p>
+            <h2>Playas cerca de ti</h2>
+            <div class="phone-beach-card">
+              <span class="beach-dot beach-dot-green"></span>
+              <div><strong>Playa Langosta</strong><small>Tranquila · 42% ocupación</small></div>
+            </div>
+            <div class="phone-beach-card">
+              <span class="beach-dot beach-dot-yellow"></span>
+              <div><strong>Playa Tortugas</strong><small>Moderada · 64% ocupación</small></div>
+            </div>
+            <div class="phone-mini-map" aria-hidden="true">🌴　🌊　📍</div>
+          </div>
+        </div>
+
+        <div class="phone phone-front">
+          <div class="phone-screen">
+            <p class="phone-kicker">SEMÁFORO PLAYERO · HOY</p>
+            <div class="phone-sun" aria-hidden="true"></div>
+            <p class="phone-greeting">Gran dia de playa</p>
+            <div class="phone-featured-beach">
+              <span class="phone-label">PLAYA DESTACADA</span>
+              <h2>Playa Delfines</h2>
+              <div class="phone-status"><span class="beach-dot beach-dot-yellow"></span> Afluencia moderada</div>
+              <div class="phone-occupancy"><strong>68%</strong><span>ocupación estimada</span></div>
+              <div class="phone-progress"><span></span></div>
+            </div>
+            <p class="phone-footnote">Vista previa · Datos ilustrativos</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
   <script src="app.js"></script>
 </body>
 
