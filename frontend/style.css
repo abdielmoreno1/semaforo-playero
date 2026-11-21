@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+}
+
+.header-logo {
+  grid-column: 2;
+}
+
+p {
+  margin-bottom: 1rem;
+  font-family: roboto, sans-serif   ;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: roboto, sans-serif;
+  font-weight: 700;
+}
+
+header{
+  background: linear-gradient(to bottom, #2631c5, #51c0de);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.hero1 {
+     font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #2631c5, #51c0de);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
