@@ -11,6 +11,9 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -74,6 +77,25 @@
         </div>
       </div>
     </section>
+
+    <section id="sp-resultados" class="sp-resultados" hidden>
+<div class="sp-contenedor">
+<p id="sp-estado" class="sp-estado" hidden></p>
+<div id="sp-ideal" class="sp-ideal" hidden></div>
+<div class="sp-mapa-wrap">
+<div class="sp-mapa-barra">
+  <button type="button" id="sp-ver-todas" class="sp-btn-secundario">Todas las
+playas</button>
+<span id="sp-ubicacion-txt" class="sp-ubicacion-txt"></span>
+</div>
+<div id="sp-mapa" class="sp-mapa"></div>
+</div>
+<h3 id="sp-lista-titulo" class="sp-lista-titulo"></h3>
+<div id="sp-lista" class="sp-lista"></div>
+</div>
+</section>
+
+    
   </main>
   <script src="app.js"></script>
 </body>

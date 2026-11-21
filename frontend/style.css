@@ -1,6 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
 :root {
+--sp-verde: #16a34a; /* semáforo del titular */
+--sp-amarillo: #d97706;/* semáforo del titular */
+--sp-rojo: #dc2626; /* semáforo del titular */
+--sp-texto: #0f172a;
+--sp-borde: #e2e8f0;
+}
+.sp-resultados { padding: 32px 0 56px; }
+.sp-contenedor { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.sp-estado { padding: 14px 16px; border-radius: 10px; background: #f8fafc; margin-bottom:
+16px; }
+.sp-estado--error { background: #fef2f2; color: #991b1b; }
+.sp-mapa-wrap { border: 1px solid var(--sp-borde); border-radius: 14px; overflow: hidden;
+margin-bottom: 24px; }
+.sp-mapa-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding:
+10px 14px; background: #f8fafc; border-bottom: 1px solid var(--sp-borde); }
+.sp-ubicacion-txt { font-size: 0.9rem; color: #475569; }
+.sp-mapa { width: 100%; height: 340px; z-index: 1; }
+.sp-lista-titulo { margin: 0 0 14px; font-size: 1.25rem; }
+.sp-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+gap: 16px; }
+.sp-card { border: 1px solid var(--sp-borde); border-radius: 14px; padding: 16px;
+background: #fff; display: flex; flex-direction: column; gap: 10px; }
+.sp-card--verde { border-top: 4px solid var(--sp-verde); }
+.sp-card--amarillo { border-top: 4px solid var(--sp-amarillo); }
+.sp-card--rojo { border-top: 4px solid var(--sp-rojo); }
+.sp-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap:
+8px; }
+.sp-card-top h4 { margin: 0; font-size: 1.1rem; }
+.sp-badge { padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+color: #fff; }
+.sp-badge--verde { background: var(--sp-verde); }
+.sp-badge--amarillo { background: var(--sp-amarillo); }
+.sp-badge--rojo { background: var(--sp-rojo); }
+.sp-meta { font-size: 0.9rem; color: #475569; margin: 0; }
+.sp-acciones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.sp-btn, .sp-btn-secundario { display: inline-block; padding: 8px 12px; border-radius: 8px;
+font-size: 0.9rem; font-weight: 600; text-decoration: none; cursor: pointer; border: 1px
+solid var(--sp-borde); background: #fff; color: var(--sp-texto); }
+.sp-btn--primario { background: var(--sp-texto); color: #fff; border-color: var(--sp-texto);
+}
+.sp-ideal { border: 2px solid var(--sp-verde); border-radius: 16px; padding: 20px;
+background: #f0fdf4; margin-bottom: 24px; }
+.sp-ideal--amarillo { border-color: var(--sp-amarillo); background: #fffbeb; }
+.sp-ideal-etiqueta { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color:
+var(--sp-verde); margin: 0 0 4px; }
+.sp-ideal h3 { margin: 0 0 6px; font-size: 1.5rem; }
+.sp-impacto { padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px solid
+#bbf7d0; font-size: 0.92rem; margin: 10px 0; }
+.sp-ideal-acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+:root {
   color-scheme: light;
   --font-titulos: "Nunito", sans-serif;
   --font-texto: "Nunito", sans-serif;
