@@ -1,7 +1,19 @@
+# Python y entornos
 __pycache__/
+*.py[cod]
 .venv/
 .env
-__pycache__/
-.venv/
-.env
+
+# Pruebas y caché
+.pytest_cache/
+.coverage
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Antigravity agent local configs
 .antigravity/
