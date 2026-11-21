@@ -243,6 +243,15 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 * **Interfaz Web:** Abre en tu navegador [http://localhost:8000/](http://localhost:8000/)
 * **Documentación Interactiva Swagger:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
+### Probar desde un celular
+
+1. Conecta el celular y la laptop a la misma red Wi-Fi.
+2. En Windows, ejecuta `ipconfig` y busca la dirección IPv4 de la conexión Wi-Fi.
+3. Inicia el servidor con `uvicorn main:app --reload --host 0.0.0.0 --port 8000`.
+4. En el celular, abre `http://<IPv4-de-la-laptop>:8000` (reemplaza el texto entre `< >` por la dirección real).
+
+Si Windows pregunta, permite Python/Uvicorn en redes privadas. No desactives el firewall.
+
 ---
 
 ## Alineación con los ODS de la ONU
