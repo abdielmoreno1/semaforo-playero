@@ -1,0 +1,402 @@
+[
+  {
+    "id": "rep-001",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T09:15:00",
+    "sargazo": 40,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-002",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T10:30:00",
+    "sargazo": 45,
+    "ocupacion": 75,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-003",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T11:45:00",
+    "sargazo": 55,
+    "ocupacion": 90,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-004",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T12:20:00",
+    "sargazo": 60,
+    "ocupacion": 95,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-005",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T13:05:00",
+    "sargazo": 65,
+    "ocupacion": 100,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-006",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T13:40:00",
+    "sargazo": 60,
+    "ocupacion": 95,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-007",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T14:30:00",
+    "sargazo": 55,
+    "ocupacion": 90,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-008",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T16:15:00",
+    "sargazo": 50,
+    "ocupacion": 70,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-009",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-22T11:30:00",
+    "sargazo": 50,
+    "ocupacion": 85,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-010",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-22T13:15:00",
+    "sargazo": 60,
+    "ocupacion": 95,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-011",
+    "playa_id": "gaviota-azul",
+    "fecha_hora": "2026-11-21T11:10:00",
+    "sargazo": 25,
+    "ocupacion": 70,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-012",
+    "playa_id": "gaviota-azul",
+    "fecha_hora": "2026-11-21T12:35:00",
+    "sargazo": 30,
+    "ocupacion": 85,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-013",
+    "playa_id": "gaviota-azul",
+    "fecha_hora": "2026-11-21T13:15:00",
+    "sargazo": 35,
+    "ocupacion": 90,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-014",
+    "playa_id": "gaviota-azul",
+    "fecha_hora": "2026-11-21T14:45:00",
+    "sargazo": 35,
+    "ocupacion": 85,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-015",
+    "playa_id": "gaviota-azul",
+    "fecha_hora": "2026-11-21T16:30:00",
+    "sargazo": 25,
+    "ocupacion": 75,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-016",
+    "playa_id": "gaviota-azul",
+    "fecha_hora": "2026-11-22T12:00:00",
+    "sargazo": 30,
+    "ocupacion": 80,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-017",
+    "playa_id": "langosta",
+    "fecha_hora": "2026-11-21T09:40:00",
+    "sargazo": 0,
+    "ocupacion": 25,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-018",
+    "playa_id": "langosta",
+    "fecha_hora": "2026-11-21T11:00:00",
+    "sargazo": 5,
+    "ocupacion": 40,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-019",
+    "playa_id": "langosta",
+    "fecha_hora": "2026-11-21T12:45:00",
+    "sargazo": 5,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-020",
+    "playa_id": "langosta",
+    "fecha_hora": "2026-11-21T13:30:00",
+    "sargazo": 10,
+    "ocupacion": 55,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-021",
+    "playa_id": "langosta",
+    "fecha_hora": "2026-11-21T15:20:00",
+    "sargazo": 5,
+    "ocupacion": 45,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-022",
+    "playa_id": "langosta",
+    "fecha_hora": "2026-11-22T10:30:00",
+    "sargazo": 0,
+    "ocupacion": 35,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-023",
+    "playa_id": "tortugas",
+    "fecha_hora": "2026-11-21T10:15:00",
+    "sargazo": 20,
+    "ocupacion": 45,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-024",
+    "playa_id": "tortugas",
+    "fecha_hora": "2026-11-21T12:10:00",
+    "sargazo": 25,
+    "ocupacion": 60,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-025",
+    "playa_id": "tortugas",
+    "fecha_hora": "2026-11-21T13:50:00",
+    "sargazo": 30,
+    "ocupacion": 65,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-026",
+    "playa_id": "tortugas",
+    "fecha_hora": "2026-11-21T15:00:00",
+    "sargazo": 20,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-027",
+    "playa_id": "caracol",
+    "fecha_hora": "2026-11-21T10:45:00",
+    "sargazo": 0,
+    "ocupacion": 30,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-028",
+    "playa_id": "caracol",
+    "fecha_hora": "2026-11-21T12:30:00",
+    "sargazo": 0,
+    "ocupacion": 45,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-029",
+    "playa_id": "caracol",
+    "fecha_hora": "2026-11-21T14:15:00",
+    "sargazo": 5,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-030",
+    "playa_id": "chac-mool",
+    "fecha_hora": "2026-11-21T11:20:00",
+    "sargazo": 30,
+    "ocupacion": 60,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-031",
+    "playa_id": "chac-mool",
+    "fecha_hora": "2026-11-21T13:00:00",
+    "sargazo": 35,
+    "ocupacion": 75,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-032",
+    "playa_id": "chac-mool",
+    "fecha_hora": "2026-11-21T14:40:00",
+    "sargazo": 40,
+    "ocupacion": 70,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-033",
+    "playa_id": "marlin",
+    "fecha_hora": "2026-11-21T10:50:00",
+    "sargazo": 35,
+    "ocupacion": 55,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-034",
+    "playa_id": "marlin",
+    "fecha_hora": "2026-11-21T12:50:00",
+    "sargazo": 40,
+    "ocupacion": 70,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-035",
+    "playa_id": "marlin",
+    "fecha_hora": "2026-11-21T15:10:00",
+    "sargazo": 45,
+    "ocupacion": 65,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-036",
+    "playa_id": "ballenas",
+    "fecha_hora": "2026-11-21T11:30:00",
+    "sargazo": 40,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-037",
+    "playa_id": "ballenas",
+    "fecha_hora": "2026-11-21T13:20:00",
+    "sargazo": 45,
+    "ocupacion": 60,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-038",
+    "playa_id": "ballenas",
+    "fecha_hora": "2026-11-21T15:45:00",
+    "sargazo": 40,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-039",
+    "playa_id": "perlas",
+    "fecha_hora": "2026-11-21T09:00:00",
+    "sargazo": 0,
+    "ocupacion": 20,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-040",
+    "playa_id": "perlas",
+    "fecha_hora": "2026-11-21T11:45:00",
+    "sargazo": 5,
+    "ocupacion": 35,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-041",
+    "playa_id": "perlas",
+    "fecha_hora": "2026-11-21T14:00:00",
+    "sargazo": 5,
+    "ocupacion": 40,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-042",
+    "playa_id": "pez-volador",
+    "fecha_hora": "2026-11-21T10:30:00",
+    "sargazo": 0,
+    "ocupacion": 20,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-043",
+    "playa_id": "pez-volador",
+    "fecha_hora": "2026-11-21T13:10:00",
+    "sargazo": 0,
+    "ocupacion": 30,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-044",
+    "playa_id": "nino",
+    "fecha_hora": "2026-11-21T09:30:00",
+    "sargazo": 5,
+    "ocupacion": 35,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-045",
+    "playa_id": "nino",
+    "fecha_hora": "2026-11-21T12:00:00",
+    "sargazo": 5,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-046",
+    "playa_id": "nino",
+    "fecha_hora": "2026-11-21T14:30:00",
+    "sargazo": 10,
+    "ocupacion": 55,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-047",
+    "playa_id": "coral",
+    "fecha_hora": "2026-11-21T10:00:00",
+    "sargazo": 15,
+    "ocupacion": 35,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-048",
+    "playa_id": "coral",
+    "fecha_hora": "2026-11-21T12:15:00",
+    "sargazo": 20,
+    "ocupacion": 50,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-049",
+    "playa_id": "coral",
+    "fecha_hora": "2026-11-21T14:50:00",
+    "sargazo": 25,
+    "ocupacion": 45,
+    "origen": "qr_sitio"
+  },
+  {
+    "id": "rep-050",
+    "playa_id": "delfines",
+    "fecha_hora": "2026-11-21T17:45:00",
+    "sargazo": 45,
+    "ocupacion": 40,
+    "origen": "qr_sitio"
+  }
+]
