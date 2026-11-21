@@ -1,0 +1,160 @@
+[
+  {
+    "id": "niño",
+    "nombre": "Playa del Niño",
+    "lat": 21.19410352148123,
+    "lng":  -86.80575582566584,
+    "popularidad": 1.0,
+    "sargazo": 45,
+    "temp_agua": 29.5,
+    "fragilidad": 70,
+    "transporte": "Bus R-1 hasta Km 18",
+    "nota": "Zona de dunas; posible anidacion de tortugas (may-oct)"
+  },
+
+  {
+    "id": "nino",
+    "nombre": "Playa del Niño",
+    "lat": 21.19410352148123,
+    "lng": -86.80575582566584,
+    "popularidad": 0.5,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "perlas",
+    "nombre": "Playa Las Perlas",
+    "lat": 21.15715199044974,
+    "lng":  -86.79980511349355,
+    "popularidad": 0.4,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "langosta",
+    "nombre": "Playa Langosta",
+    "lat": 21.145910697350004,
+    "lng": -86.78001842448977,
+    "popularidad": 0.7,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "pez-volador",
+    "nombre": "Playa Pez Volador",
+    "lat": 21.14550520104109,
+    "lng": -86.77773390748285,
+    "popularidad": 0.3,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "tortugas",
+    "nombre": "Playa Tortugas",
+    "lat": 21.1371,
+    "lng": -86.7628,
+    "popularidad": 0.8,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "caracol",
+    "nombre": "Playa Caracol",
+    "lat": 21.1325,
+    "lng": -86.7475,
+    "popularidad": 0.7,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "gaviota-azul",
+    "nombre": "Playa Gaviota Azul",
+    "lat": 21.129270026086438,
+    "lng": -86.74898314545788,
+    "popularidad": 0.9,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "chac-mool",
+    "nombre": "Playa Chac Mool",
+    "lat": 21.1281,
+    "lng": -86.7535,
+    "popularidad": 0.8,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "marlin",
+    "nombre": "Playa Marlín",
+    "lat": 21.104391500447527,
+    "lng": -86.76348763030015,
+    "popularidad": 0.7,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "ballenas",
+    "nombre": "Playa Ballenas",
+    "lat": 21.09342536971575,
+    "lng": -86.77062320064508,
+    "popularidad": 0.6,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "delfines",
+    "nombre": "Playa Delfines",
+    "lat": 21.061999556185675,
+    "lng": -86.77782239892295,
+    "popularidad": 1.0,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  },
+  {
+    "id": "coral",
+    "nombre": "Playa Coral",
+    "lat": 21.025859509702297,
+    "lng": -86.8119814847214,
+    "popularidad": 0.5,
+    "sargazo": null,
+    "temp_agua": 28.87,
+    "fragilidad": null,
+    "transporte": "",
+    "nota": ""
+  }
+
+]
